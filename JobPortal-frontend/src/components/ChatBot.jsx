@@ -26,16 +26,25 @@ export default function ChatBot() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: text }),
       });
+      
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || errorData.message || 'Failed to get response');
+      }
+      
       const data = await res.json();
+      
+      console.log('AI Response:', data);
       
       setMessages((prev) => [
         ...prev,
         { role: "bot", text: data.answer, contexts: data.contexts || [] },
       ]);
-    } catch {
+    } catch (error) {
+      console.error('Chat error:', error);
       setMessages((prev) => [
         ...prev,
-        { role: "bot", text: "Error connecting to server" },
+        { role: "bot", text: `Error: ${error.message}. Make sure the server is running and trained with documents.` },
       ]);
     }
     setLoading(false);
@@ -84,7 +93,7 @@ export default function ChatBot() {
           </div>
           <div className="flex-1">
             <p className="text-white font-bold text-sm">AI Assistant</p>
-            <p className="text-white/70 text-[11px] font-medium">Powered by JobPortal AI</p>
+            <p className="text-white/70 text-[11px] font-medium">Powered by HireX AI</p>
           </div>
           <button 
             onClick={() => setIsOpen(false)}
@@ -182,7 +191,7 @@ export default function ChatBot() {
 
         {/* Footer */}
         <p className="text-center text-[10.5px] text-violet-300 font-medium pb-2.5 bg-white">
-          Powered by <span className="text-violet-500 font-bold">JobPortal AI</span>
+          Powered by <span className="text-violet-500 font-bold">HireX AI</span>
         </p>
       </div>
       )}
