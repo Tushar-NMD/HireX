@@ -40,33 +40,33 @@ class JobService {
 
     // Post a new job (Admin)
     async postJob(jobData) {
-        return await this.api.post('/api/admin/jobs', jobData);
+        return await this.api.post('/admin/jobs', jobData);
     }
 
     // Get all jobs posted by admin
     async getMyJobs() {
-        return await this.api.get('/api/admin/jobs/my-jobs');
+        return await this.api.get('/admin/jobs/my-jobs');
     }
 
     // Get single job details (Public/Employee)
     async getJobById(jobId) {
-        return await this.api.get(`/api/jobs/${jobId}`);
+        return await this.api.get(`/jobs/${jobId}`);
     }
 
     // Update job
     async updateJob(jobId, jobData) {
-        return await this.api.put(`/api/admin/jobs/${jobId}`, jobData);
+        return await this.api.put(`/admin/jobs/${jobId}`, jobData);
     }
 
     // Delete job
     async deleteJob(jobId) {
-        return await this.api.delete(`/api/admin/jobs/${jobId}`);
+        return await this.api.delete(`/admin/jobs/${jobId}`);
     }
 
     // Get all jobs (Employee/Public)
     async getAllJobs(filters = {}) {
         const queryParams = new URLSearchParams(filters).toString();
-        return await this.api.get(`/api/jobs${queryParams ? `?${queryParams}` : ''}`);
+        return await this.api.get(`/jobs${queryParams ? `?${queryParams}` : ''}`);
     }
 
     // Apply for a job (Employee/User)
@@ -75,7 +75,7 @@ class JobService {
         formData.append('resume', applicationData.resume);
         formData.append('coverLetter', applicationData.coverLetter);
         
-        return await this.api.post(`/api/applications/${jobId}`, formData, {
+        return await this.api.post(`/applications/${jobId}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -84,22 +84,22 @@ class JobService {
 
     // Get my applications (Employee/User)
     async getMyApplications() {
-        return await this.api.get('/api/applications/my-applications');
+        return await this.api.get('/applications/my-applications');
     }
 
     // Get all job applications (Admin)
     async getAllApplications() {
-        return await this.api.get('/api/admin/applications');
+        return await this.api.get('/admin/applications');
     }
 
     // Get job applications for specific job (Admin)
     async getJobApplications(jobId) {
-        return await this.api.get(`/api/admin/jobs/${jobId}/applications`);
+        return await this.api.get(`/admin/jobs/${jobId}/applications`);
     }
 
     // Update application status (Admin)
     async updateApplicationStatus(applicationId, status) {
-        return await this.api.put(`/api/admin/applications/${applicationId}/status`, { status });
+        return await this.api.put(`/admin/applications/${applicationId}/status`, { status });
     }
 }
 

@@ -39,7 +39,7 @@ class AuthService {
 
     // Admin Registration
     async registerAdmin(userData) {
-        return await this.api.post('/api/admin/register', {
+        return await this.api.post('/admin/register', {
             name: userData.name,
             email: userData.email,
             password: userData.password,
@@ -48,7 +48,7 @@ class AuthService {
 
     // Admin Login
     async loginAdmin(userData) {
-        return await this.api.post('/api/admin/login', {
+        return await this.api.post('/admin/login', {
             email: userData.email,
             password: userData.password,
         });
@@ -56,7 +56,7 @@ class AuthService {
 
     // Employee/User Registration
     async registerEmployee(userData) {
-        return await this.api.post('/api/users/register', {
+        return await this.api.post('/users/register', {
             name: userData.name,
             email: userData.email,
             password: userData.password,
@@ -65,7 +65,7 @@ class AuthService {
 
     // Employee/User Login
     async loginEmployee(userData) {
-        return await this.api.post('/api/users/login', {
+        return await this.api.post('/users/login', {
             email: userData.email,
             password: userData.password,
         });
@@ -73,22 +73,22 @@ class AuthService {
 
     // Get Admin Profile
     async getAdminProfile() {
-        return await this.api.get('/api/admin/profile');
+        return await this.api.get('/admin/profile');
     }
 
     // Get Employee/User Profile
     async getEmployeeProfile() {
-        return await this.api.get('/api/users/profile');
+        return await this.api.get('/users/profile');
     }
 
     // Update Admin Profile
     async updateAdminProfile(profileData) {
-        return await this.api.put('/api/admin/profile', profileData);
+        return await this.api.put('/admin/profile', profileData);
     }
 
     // Update Employee/User Profile
     async updateEmployeeProfile(profileData) {
-        return await this.api.put('/api/users/profile', profileData);
+        return await this.api.put('/users/profile', profileData);
     }
 
     // Upload Admin Profile Picture
@@ -96,7 +96,7 @@ class AuthService {
         const formData = new FormData();
         formData.append('profilePic', file);
 
-        return await this.api.post('/api/admin/upload-profile-pic', formData, {
+        return await this.api.post('/admin/upload-profile-pic', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -108,7 +108,7 @@ class AuthService {
         const formData = new FormData();
         formData.append('profilePic', file);
 
-        return await this.api.post('/api/users/upload-profile-pic', formData, {
+        return await this.api.post('/users/upload-profile-pic', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
