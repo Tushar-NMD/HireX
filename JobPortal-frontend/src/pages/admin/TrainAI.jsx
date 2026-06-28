@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import conf from '../../config/index.js';
 
 export default function TrainAI() {
   const [documents, setDocuments] = useState([{ title: "", text: "" }]);
@@ -21,7 +22,7 @@ export default function TrainAI() {
   const fetchStatus = async () => {
     setLoadingStatus(true);
     try {
-      const res = await fetch("http://localhost:5000/api/chat/status");
+      const res = await fetch(`${conf.apiBaseUrl}/chat/status`);
       if (res.ok) {
         const data = await res.json();
         setStatus(data);
@@ -60,7 +61,7 @@ export default function TrainAI() {
     try {
       const token = localStorage.getItem("jobportal_token");
 
-      const res = await fetch("http://localhost:5000/api/train", {
+      const res = await fetch(`${conf.apiBaseUrl}/train`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -94,7 +95,7 @@ export default function TrainAI() {
     try {
       const token = localStorage.getItem("jobportal_token");
 
-      const res = await fetch("http://localhost:5000/api/train/clear", {
+      const res = await fetch(`${conf.apiBaseUrl}/train/clear`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

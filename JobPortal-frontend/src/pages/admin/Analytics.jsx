@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import conf from '../../config/index.js';
 
 export default function Analytics() {
   const [analytics, setAnalytics] = useState(null);
@@ -12,7 +13,7 @@ export default function Analytics() {
   const fetchAnalytics = async () => {
     try {
       const token = localStorage.getItem('jobportal_token');
-      const res = await fetch('http://localhost:5000/api/analytics/admin', {
+      const res = await fetch(`${conf.apiBaseUrl}/analytics/admin`, {
         headers: {
           Authorization: `Bearer ${token}`
         }

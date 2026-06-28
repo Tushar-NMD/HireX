@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import conf from '../../config/index.js';
 
 export default function ChatBot() {
   const [messages, setMessages] = useState([]);
@@ -21,7 +22,7 @@ export default function ChatBot() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/chat", {
+      const res = await fetch(`${conf.apiBaseUrl}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: text }),

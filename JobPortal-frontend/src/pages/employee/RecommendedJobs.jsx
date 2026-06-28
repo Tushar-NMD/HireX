@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import conf from '../../config/index.js';
 
 export default function RecommendedJobs() {
   const [jobs, setJobs] = useState([]);
@@ -14,7 +15,7 @@ export default function RecommendedJobs() {
   const fetchRecommendations = async () => {
     try {
       const token = localStorage.getItem('jobportal_token');
-      const res = await fetch('http://localhost:5000/api/jobs/recommendations', {
+      const res = await fetch(`${conf.apiBaseUrl}/jobs/recommendations`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
