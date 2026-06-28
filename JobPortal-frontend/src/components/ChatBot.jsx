@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import conf from '../../config/index.js';
+import conf from "../config/index.js";
 
 export default function ChatBot() {
   const [messages, setMessages] = useState([]);
