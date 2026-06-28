@@ -1,18 +1,30 @@
 const { pipeline } = require('@xenova/transformers');
 const RAGDocument = require('../models/RAGDocument');
+const axios = require('axios');
 
 class RAGService {
   constructor() {
     this.embedder = null;
     this.initialized = false;
-    this.documentsCache = null; // Cache for performance
+    this.documentsCache = null;
+    // Don't load API key in constructor - load it when needed
+  }
+  
+  getGroqApiKey() {
+    // Load API key when actually needed
+    if (!this._groqApiKey) {
+      this._groqApiKey = process.env.GROQ_API_KEY;
+      console.log('🔍 Loading GROQ_API_KEY:', this._groqApiKey ? 'FOUND' : 'NOT FOUND');
+    }
+    return this._groqApiKey;
   }
 
   async initialize() {
     if (this.initialized) return;
 
     try {
-      console.log('Initializing RAG Service...');
+      console.log('🚀 Initializing RAG Service...');
+      console.log('📥 Loading embedding model (this may take 10-20 seconds on first run)...');
       
       // Load embedding model
       this.embedder = await pipeline(
@@ -20,13 +32,17 @@ class RAGService {
         'Xenova/all-MiniLM-L6-v2'
       );
 
+      console.log('✅ Embedding model loaded successfully');
+
       // Load documents from MongoDB into cache
+      console.log('📚 Loading documents from database...');
       await this.loadDocumentsCache();
 
       this.initialized = true;
-      console.log('RAG Service initialized successfully');
+      console.log('✅ RAG Service initialized successfully');
+      console.log(`📊 Total documents loaded: ${this.documentsCache.length}`);
     } catch (error) {
-      console.error('Failed to initialize RAG Service:', error);
+      console.error('❌ Failed to initialize RAG Service:', error);
       throw error;
     }
   }
@@ -51,13 +67,19 @@ class RAGService {
 
   async generateEmbedding(text) {
     try {
+      if (!this.embedder) {
+        throw new Error('Embedder not initialized. Call initialize() first.');
+      }
+      
+      console.log('🔄 Generating embedding for text...');
       const output = await this.embedder(text, {
         pooling: 'mean',
         normalize: true
       });
+      console.log('✅ Embedding generated successfully');
       return Array.from(output.data);
     } catch (error) {
-      console.error('Error generating embedding:', error);
+      console.error('❌ Error generating embedding:', error);
       throw error;
     }
   }
@@ -124,131 +146,179 @@ class RAGService {
   }
 
   async askQuestion(question, k = 3) {
+    console.log(`\n💬 Processing question: "${question}"`);
     await this.initialize();
 
     try {
-      if (!this.documentsCache || this.documentsCache.length === 0) {
-        return {
-          answer: "I don't have enough information to answer that question. Please train me with relevant documents first.",
-          contexts: [],
-          question
-        };
+      // Even if no documents, still use Gemini to answer
+      let contexts = [];
+      
+      if (this.documentsCache && this.documentsCache.length > 0) {
+        console.log(`📚 Searching through ${this.documentsCache.length} documents...`);
+
+        // Generate embedding for the question
+        const questionEmbedding = await this.generateEmbedding(question);
+
+        // Calculate similarity with all documents
+        const similarities = this.documentsCache.map(doc => ({
+          ...doc,
+          similarity: this.cosineSimilarity(questionEmbedding, doc.embedding)
+        }));
+
+        // Sort by similarity and get top k
+        similarities.sort((a, b) => b.similarity - a.similarity);
+        const topDocs = similarities.slice(0, k);
+
+        console.log(`🎯 Top ${k} matches found:`);
+        topDocs.forEach((doc, idx) => {
+          console.log(`  ${idx + 1}. "${doc.title}" (similarity: ${doc.similarity.toFixed(3)})`);
+        });
+
+        // Extract relevant contexts
+        contexts = topDocs.map(doc => ({
+          text: doc.text,
+          title: doc.title,
+          category: doc.category,
+          similarity: doc.similarity
+        }));
+      } else {
+        console.log('⚠️  No documents in cache - Gemini will answer without context');
+        // Create a dummy context for Gemini to work with
+        contexts = [{
+          text: '',
+          title: 'No context',
+          category: 'general',
+          similarity: 0
+        }];
       }
 
-      // Generate embedding for the question
-      const questionEmbedding = await this.generateEmbedding(question);
+      // Generate answer using Gemini AI
+      const answer = await this.generateAnswerWithGemini(question, contexts);
 
-      // Calculate similarity with all documents
-      const similarities = this.documentsCache.map(doc => ({
-        ...doc,
-        similarity: this.cosineSimilarity(questionEmbedding, doc.embedding)
-      }));
-
-      // Sort by similarity and get top k
-      similarities.sort((a, b) => b.similarity - a.similarity);
-      const topDocs = similarities.slice(0, k);
-
-      // Extract relevant contexts
-      const contexts = topDocs.map(doc => ({
-        text: doc.text,
-        title: doc.title,
-        category: doc.category,
-        similarity: doc.similarity
-      }));
-
-      // Generate answer based on contexts
-      const answer = this.generateAnswer(question, contexts);
+      console.log('✅ Answer generated successfully\n');
 
       return {
         answer,
-        contexts: contexts.map(c => ({
-          title: c.title,
-          text: c.text.substring(0, 200) + '...',
-          category: c.category
-        })),
+        contexts: contexts
+          .filter(c => c.similarity > 0)
+          .map(c => ({
+            title: c.title,
+            text: c.text.substring(0, 200) + '...',
+            category: c.category
+          })),
         question
       };
     } catch (error) {
-      console.error('Error processing question:', error);
+      console.error('❌ Error processing question:', error);
       throw error;
     }
   }
 
-  generateAnswer(question, contexts) {
-    if (contexts.length === 0) {
-      return "I don't have enough information to answer that question. Our team will reach you shortly with more details.";
-    }
-
-    // Check relevance score - if too low, don't answer
+  async generateAnswerWithGemini(question, contexts) {
     const bestMatch = contexts[0];
-    if (bestMatch.similarity < 0.3) {
-      return "I don't have specific information about that. Our support team will reach you shortly to help with your query.";
-    }
-
-    // Simple answer generation based on context relevance
-    const relevantContext = contexts[0];
+    const groqApiKey = this.getGroqApiKey(); // Get API key dynamically
     
-    // Extract key information based on question type
-    const questionLower = question.toLowerCase();
+    console.log(`🤖 Using Groq AI - Best match similarity: ${bestMatch.similarity.toFixed(3)}`);
+    console.log(`🔑 Groq API Key present: ${groqApiKey ? 'YES' : 'NO'}`);
     
-    if (questionLower.includes('salary') || questionLower.includes('pay')) {
-      return this.extractSalaryInfo(contexts);
-    } else if (questionLower.includes('job') || questionLower.includes('position')) {
-      return this.extractJobInfo(contexts);
-    } else if (questionLower.includes('requirement') || questionLower.includes('skill')) {
-      return this.extractRequirementInfo(contexts);
-    } else if (questionLower.includes('company') || questionLower.includes('organization')) {
-      return this.extractCompanyInfo(contexts);
-    } else if (questionLower.includes('how to') || questionLower.includes('apply')) {
-      return this.extractApplicationInfo(contexts);
+    // If no Groq API key, use fallback
+    if (!groqApiKey) {
+      console.log('⚠️  No Groq API key found, using fallback response');
+      if (bestMatch.text) {
+        return bestMatch.text;
+      }
+      return "I don't have information about that. Please contact our support team for assistance.";
     }
 
-    // Default: Return summary of most relevant context only if similarity is good
-    if (relevantContext.similarity > 0.4) {
-      return `Based on our information: ${relevantContext.text.substring(0, 300)}${relevantContext.text.length > 300 ? '...' : ''}`;
-    } else {
-      return "I'm not sure about that specific question. Our team will get back to you with accurate information.";
-    }
-  }
-
-  extractSalaryInfo(contexts) {
-    for (const context of contexts) {
-      if (context.similarity < 0.3) continue;
+    try {
+      // Prepare context for Groq
+      let contextText = '';
+      const goodMatches = contexts.filter(c => c.text && c.text.trim() !== '');
       
-      const salaryMatch = context.text.match(/\$[\d,]+(?:\s*-\s*\$[\d,]+)?|\d+k?\s*-\s*\d+k?/i);
-      if (salaryMatch) {
-        return `Salary information: ${salaryMatch[0]}. ${context.text.substring(0, 200)}`;
+      if (goodMatches.length > 0) {
+        contextText = goodMatches
+          .map((c, idx) => `Document ${idx + 1} (${c.title}):\n${c.text}`)
+          .join('\n\n');
+      }
+
+      // Build the system and user messages
+      const systemMessage = "You are a helpful job portal assistant. Answer questions about jobs, careers, and employment in a friendly and professional manner. Be concise but informative.";
+      
+      let userMessage;
+      if (contextText) {
+        userMessage = `Based on these documents from our job portal:
+
+${contextText}
+
+User question: ${question}
+
+Please answer the question. If the documents contain relevant information, use it. Otherwise, provide a helpful general answer about jobs and careers.`;
+      } else {
+        userMessage = `User question: ${question}
+
+Please provide a helpful answer about jobs, careers, or employment.`;
+      }
+
+      console.log('📤 Sending request to Groq API...');
+
+      // Call Groq API
+      const response = await axios.post(
+        'https://api.groq.com/openai/v1/chat/completions',
+        {
+          model: 'llama-3.3-70b-versatile', // Fast and powerful
+          messages: [
+            {
+              role: 'system',
+              content: systemMessage
+            },
+            {
+              role: 'user',
+              content: userMessage
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: 800,
+          top_p: 1,
+          stream: false
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${groqApiKey}`,
+            'Content-Type': 'application/json',
+          },
+          timeout: 30000
+        }
+      );
+
+      console.log(`📥 Groq API response status: ${response.status}`);
+
+      const data = response.data;
+      
+      if (data.choices && data.choices[0]?.message?.content) {
+        const answer = data.choices[0].message.content.trim();
+        console.log('✅ Groq AI answer extracted successfully');
+        return answer;
+      } else {
+        console.error('❌ Invalid Groq response structure:', JSON.stringify(data, null, 2));
+        throw new Error('Invalid response from Groq API');
+      }
+
+    } catch (error) {
+      console.error('❌ Groq API error:', error.message);
+      if (error.response) {
+        console.error('Error response data:', JSON.stringify(error.response.data, null, 2));
+        console.error('Error response status:', error.response.status);
+      }
+      
+      // Fallback to trained document
+      if (bestMatch.text && bestMatch.text.trim() !== '') {
+        console.log('↩️  Falling back to trained document');
+        return bestMatch.text;
+      } else {
+        console.log('↩️  No trained document available');
+        return "I'm having trouble connecting to AI service. Please try again later.";
       }
     }
-    return "I don't have specific salary information for this role. Please contact our HR team for detailed compensation details.";
-  }
-
-  extractJobInfo(contexts) {
-    if (contexts[0].similarity < 0.3) {
-      return "I don't have specific information about that job. Our recruitment team will reach you shortly with details.";
-    }
-    return `Here's what I found about jobs: ${contexts[0].text.substring(0, 300)}${contexts[0].text.length > 300 ? '...' : ''}`;
-  }
-
-  extractRequirementInfo(contexts) {
-    if (contexts[0].similarity < 0.3) {
-      return "I don't have specific requirement details. Our team will provide comprehensive information shortly.";
-    }
-    return `Requirements: ${contexts[0].text.substring(0, 300)}${contexts[0].text.length > 300 ? '...' : ''}`;
-  }
-
-  extractCompanyInfo(contexts) {
-    if (contexts[0].similarity < 0.3) {
-      return "I don't have specific company information at the moment. Our team will reach you with details soon.";
-    }
-    return `Company information: ${contexts[0].text.substring(0, 300)}${contexts[0].text.length > 300 ? '...' : ''}`;
-  }
-
-  extractApplicationInfo(contexts) {
-    if (contexts[0].similarity < 0.3) {
-      return "I don't have specific application process details. Please check the job listing or contact our support team.";
-    }
-    return `Application process: ${contexts[0].text.substring(0, 300)}${contexts[0].text.length > 300 ? '...' : ''}`;
   }
 
   async deleteAllDocuments() {
