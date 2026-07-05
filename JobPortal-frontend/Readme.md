@@ -3,7 +3,7 @@
 An AI-powered full stack MERN Job Portal platform that enables recruiters and job seekers to interact seamlessly with intelligent recruitment workflows, real-time application tracking, and a Retrieval-Augmented Generation (RAG) chatbot for context-aware assistance.
 
 ## 🚀 Live Demo
-🔗 Live Website: https://job-portal-frontend-z8sw.vercel.app/
+🔗 Live Website: https://tushardev.xyz/
 
 ## 📌 Features
 
@@ -55,15 +55,12 @@ An AI-powered full stack MERN Job Portal platform that enables recruiters and jo
 - bcrypt Password Hashing
 - Role-Based Access Control (RBAC)
 
-### Cloud & Deployment
-- Cloudinary
-- Vercel
-- Render
-
-### AI Integration
-- RAG Architecture
-- NLP-based Chatbot
-- Semantic Search
+### DevOps & Deployment 
+. Docker Inc. Docker Documentation. https://docs.docker.com/  
+. Docker Inc. Docker Compose Documentation. https://docs.docker.com/compose/  
+. Nginx. Official Documentation. https://nginx.org/en/docs/  
+. Amazon Web Services. Amazon EC2 Documentation. https://docs.aws.amazon.com/ec2/  
+. GitHub Docs. GitHub Actions Documentation. https://docs.github.com/en/actions  
 
 ---
 
