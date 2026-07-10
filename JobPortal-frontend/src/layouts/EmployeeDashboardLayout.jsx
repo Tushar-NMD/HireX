@@ -10,14 +10,35 @@ import authService from '../services/authService';
 
 const EmployeeDashboardLayout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [userProfilePic, setUserProfilePic] = useState(authService.getUserData()?.profilePic);
+  const [userProfilePic, setUserProfilePic] = useState(null);
+  const [userName, setUserName] = useState(authService.getUserData()?.name || 'Job Seeker');
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Fetch user profile on mount
+    const fetchProfile = async () => {
+      try {
+        const response = await authService.getEmployeeProfile();
+        if (response.success && response.data) {
+          setUserProfilePic(response.data.profilePic);
+          setUserName(response.data.name);
+        }
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+
+    fetchProfile();
+
     // Listen for profile picture updates
     const handleProfilePicUpdate = (event) => {
-      setUserProfilePic(event.detail.profilePic);
+      if (event.detail.profilePic) {
+        setUserProfilePic(event.detail.profilePic);
+      }
+      if (event.detail.name) {
+        setUserName(event.detail.name);
+      }
     };
 
     window.addEventListener('profilePicUpdated', handleProfilePicUpdate);
@@ -45,18 +66,6 @@ const EmployeeDashboardLayout = ({ children }) => {
       path: '/employee/jobs',
       icon: FaBriefcase,
       color: 'from-purple-500 to-purple-600'
-    },
-    {
-      name: 'Job Details',
-      path: '/employee/job-details',
-      icon: FaEye,
-      color: 'from-orange-500 to-orange-600'
-    },
-    {
-      name: 'Apply for Job',
-      path: '/employee/apply',
-      icon: FaPaperPlane,
-      color: 'from-pink-500 to-pink-600'
     },
     {
       name: 'Applied Jobs',
@@ -100,7 +109,14 @@ const EmployeeDashboardLayout = ({ children }) => {
         {/* Sidebar Header */}
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-3 group">
+            <Link 
+              to="/" 
+              className="flex items-center space-x-3 group"
+              onClick={(e) => {
+                // Don't prevent default - just navigate to home
+                setIsSidebarOpen(false);
+              }}
+            >
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg blur opacity-75 group-hover:opacity-100 transition duration-300"></div>
                 <div className="relative bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
@@ -108,7 +124,7 @@ const EmployeeDashboardLayout = ({ children }) => {
                 </div>
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                JobPortal
+                HireX
               </span>
             </Link>
             <button
@@ -133,7 +149,8 @@ const EmployeeDashboardLayout = ({ children }) => {
                   key={index}
                   onClick={() => {
                     setIsSidebarOpen(false);
-                    navigate(item.path);
+                    authService.logout();
+                    navigate('/');
                   }}
                   className="w-full group flex items-center space-x-3 p-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:-translate-y-1 text-red-600 hover:bg-red-50"
                 >
@@ -207,7 +224,7 @@ const EmployeeDashboardLayout = ({ children }) => {
                 </div>
                 <div className="hidden sm:block">
                   <p className="text-sm font-medium text-gray-900 group-hover:text-green-600 transition-colors">Welcome back!</p>
-                  <p className="text-xs text-gray-600">{authService.getUserData()?.name || 'Job Seeker'}</p>
+                  <p className="text-xs text-gray-600">{userName}</p>
                 </div>
               </Link>
             </div>

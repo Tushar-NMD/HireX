@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -6,6 +6,7 @@ import ChatBot from "../components/ChatBot";
 import { FaUserTie, FaUserNinja, FaUserGraduate, FaQuoteLeft } from "react-icons/fa";
 import { HiSparkles } from "react-icons/hi2";
 import { BsFillStarFill } from "react-icons/bs";
+import authService from '../services/authService';
 
 import {
     Search, MapPin, Briefcase, TrendingUp, Users, Building2,
@@ -16,6 +17,22 @@ const Home = () => {
     const navigate = useNavigate();
     const [searchQuery, setSearchQuery] = useState('');
     const [location, setLocation] = useState('');
+
+    // Check if user is already logged in and redirect to dashboard
+    useEffect(() => {
+        const token = authService.getToken();
+        const userData = authService.getUserData();
+        
+        if (token && userData) {
+            // Redirect based on role
+            if (userData.role === 'admin') {
+                navigate('/admin/dashboard');
+            } else {
+                // For employees/users (role: 'employee' or 'user')
+                navigate('/employee/jobs');
+            }
+        }
+    }, [navigate]);
 
     const stats = [
         { icon: Briefcase, value: '50,000+', label: 'Jobs Available', color: 'from-blue-500 to-blue-600' },

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FaUserShield, FaUserTie, FaEnvelope, FaLock, FaUser, FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -17,6 +17,22 @@ const Auth = () => {
         email: '',
         password: '',
     });
+
+    // Check if user is already logged in and redirect to dashboard
+    useEffect(() => {
+        const token = authService.getToken();
+        const userData = authService.getUserData();
+        
+        if (token && userData) {
+            // Redirect based on role
+            if (userData.role === 'admin') {
+                navigate('/admin/dashboard');
+            } else {
+                // For employees/users (role: 'employee' or 'user')
+                navigate('/employee/jobs');
+            }
+        }
+    }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

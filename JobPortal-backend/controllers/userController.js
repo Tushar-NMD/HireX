@@ -176,11 +176,62 @@ const uploadUserProfilePic = async (req, res) => {
     }
 };
 
+const updateUserProfile = async (req, res) => {
+    try {
+        const { name, email, profilePic } = req.body;
+
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        // Update fields if provided
+        if (name) user.name = name;
+        if (email) {
+            // Check if email is already taken by another user
+            const emailExists = await User.findOne({ email, _id: { $ne: req.user.id } });
+            if (emailExists) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Email already in use by another account'
+                });
+            }
+            user.email = email;
+        }
+        if (profilePic) user.profilePic = profilePic;
+
+        await user.save();
+
+        res.json({
+            success: true,
+            message: 'Profile updated successfully',
+            data: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                profilePic: user.profilePic
+            }
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: 'Server error',
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     registerUser,
     loginUser,
     getUserProfile,
-    uploadUserProfilePic
+    uploadUserProfilePic,
+    updateUserProfile
 };
 
 

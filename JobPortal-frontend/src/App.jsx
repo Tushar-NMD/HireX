@@ -26,7 +26,7 @@ import authService from "./services/authService";
 function App(){
   // Get user data to check role
   const userData = authService.getUserData();
-  const isEmployee = userData && userData.role === 'user';
+  const isEmployee = userData && (userData.role === 'employee' || userData.role === 'user');
 
   return (
       <Router>

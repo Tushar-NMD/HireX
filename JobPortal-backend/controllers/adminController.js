@@ -238,10 +238,61 @@ const uploadProfilePic = async (req, res) => {
   }
 };
 
+const updateAdminProfile = async (req, res) => {
+  try {
+    const { name, email, profilePic } = req.body;
+
+    const admin = await Admin.findById(req.admin.id);
+
+    if (!admin) {
+      return res.status(404).json({
+        success: false,
+        message: 'Admin not found'
+      });
+    }
+
+    // Update fields if provided
+    if (name) admin.name = name;
+    if (email) {
+      // Check if email is already taken by another admin
+      const emailExists = await Admin.findOne({ email, _id: { $ne: req.admin.id } });
+      if (emailExists) {
+        return res.status(400).json({
+          success: false,
+          message: 'Email already in use by another account'
+        });
+      }
+      admin.email = email;
+    }
+    if (profilePic) admin.profilePic = profilePic;
+
+    await admin.save();
+
+    res.json({
+      success: true,
+      message: 'Profile updated successfully',
+      data: {
+        _id: admin._id,
+        name: admin.name,
+        email: admin.email,
+        role: admin.role,
+        profilePic: admin.profilePic
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Server error',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   registerAdmin,
   loginAdmin,
   getAdminProfile,
+  updateAdminProfile,
   updateAdminProfilePic,
   uploadProfilePic
 };
