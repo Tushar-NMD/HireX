@@ -272,6 +272,84 @@ const JobApplications = () => {
 
                 {/* Application Details */}
                 <div className="grid md:grid-cols-2 gap-4">
+                  {/* Resume Match Score */}
+                  {application.resumeAnalysis && application.resumeAnalysis.matchScore > 0 && (
+                    <div className="bg-purple-50 rounded-xl p-4">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <HiSparkles className="w-4 h-4 text-purple-600" />
+                        <h5 className="font-semibold text-gray-900">Resume Match Score</h5>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-16 h-16 rounded-full ${
+                          application.resumeAnalysis.matchScore >= 80 ? 'bg-green-100' :
+                          application.resumeAnalysis.matchScore >= 60 ? 'bg-yellow-100' : 'bg-red-100'
+                        } flex items-center justify-center`}>
+                          <span className={`text-xl font-bold ${
+                            application.resumeAnalysis.matchScore >= 80 ? 'text-green-600' :
+                            application.resumeAnalysis.matchScore >= 60 ? 'text-yellow-600' : 'text-red-600'
+                          }`}>
+                            {application.resumeAnalysis.matchScore}%
+                          </span>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xs text-gray-600 mb-1">Match Quality</p>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className={`h-2 rounded-full ${
+                                application.resumeAnalysis.matchScore >= 80 ? 'bg-green-500' :
+                                application.resumeAnalysis.matchScore >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                              }`}
+                              style={{ width: `${application.resumeAnalysis.matchScore}%` }}
+                            />
+                          </div>
+                          <p className="text-xs text-gray-500 mt-1">
+                            {application.resumeAnalysis.matchScore >= 80 ? 'Excellent Match' :
+                             application.resumeAnalysis.matchScore >= 60 ? 'Good Match' : 'Fair Match'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Interview Score */}
+                  {application.interview?.completed && (
+                    <div className="bg-blue-50 rounded-xl p-4">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <HiSparkles className="w-4 h-4 text-blue-600" />
+                        <h5 className="font-semibold text-gray-900">AI Interview Score</h5>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-16 h-16 rounded-full ${
+                          application.interview.score >= 80 ? 'bg-green-100' :
+                          application.interview.score >= 60 ? 'bg-yellow-100' : 'bg-red-100'
+                        } flex items-center justify-center`}>
+                          <span className={`text-xl font-bold ${
+                            application.interview.score >= 80 ? 'text-green-600' :
+                            application.interview.score >= 60 ? 'text-yellow-600' : 'text-red-600'
+                          }`}>
+                            {application.interview.score}%
+                          </span>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xs text-gray-600 mb-1">Performance</p>
+                          <div className="w-full bg-gray-200 rounded-full h-2">
+                            <div
+                              className={`h-2 rounded-full ${
+                                application.interview.score >= 80 ? 'bg-green-500' :
+                                application.interview.score >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+                              }`}
+                              style={{ width: `${application.interview.score}%` }}
+                            />
+                          </div>
+                          <p className="text-xs text-gray-500 mt-1">
+                            {application.interview.score >= 80 ? 'Excellent' :
+                             application.interview.score >= 60 ? 'Good' : 'Needs Improvement'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {/* Cover Letter */}
                   {application.coverLetter && (
                     <div className="bg-blue-50 rounded-xl p-4">

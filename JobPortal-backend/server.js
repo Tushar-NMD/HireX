@@ -28,6 +28,18 @@ app.use("/api", trainRoutes);
 // Recommendation routes
 app.use('/api/jobs', require('./routes/recommendationRoutes'));
 
+// Resume Ranking routes
+app.use('/api/admin', require('./routes/resumeRankingRoutes'));
+
+// AI Job Parser routes
+app.use('/api/admin', require('./routes/aiJobParserRoutes'));
+
+// Resume Analysis routes
+app.use('/api/applications', require('./routes/resumeAnalysisRoutes'));
+
+// Schedule Interview routes
+app.use('/api/interviews', require('./routes/scheduleInterviewRoutes'));
+
 // Analytics routes
 app.use('/api/analytics', require('./routes/analyticsRoutes'));
 

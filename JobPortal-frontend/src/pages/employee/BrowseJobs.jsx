@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { FaBriefcase, FaMapMarkerAlt, FaDollarSign, FaCalendar, FaEye, FaHeart, FaSearch, FaFilter, FaClock, FaBuilding, FaUser } from 'react-icons/fa';
+import { FaBriefcase, FaMapMarkerAlt, FaRupeeSign, FaCalendar, FaEye, FaHeart, FaSearch, FaFilter, FaClock, FaBuilding, FaUser } from 'react-icons/fa';
 import { HiSparkles } from 'react-icons/hi2';
 import jobService from '../../services/jobService';
 
@@ -186,16 +186,12 @@ const BrowseJobs = () => {
                           <span>{job.location}</span>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <FaDollarSign className="w-4 h-4" />
+                          <FaRupeeSign className="w-4 h-4" />
                           <span>{job.salary}</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <FaClock className="w-4 h-4" />
                           <span>{job.experience}</span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <FaCalendar className="w-4 h-4" />
-                          <span>{getTimeAgo(job.createdAt)}</span>
                         </div>
                       </div>
                       {/* Posted By */}
@@ -205,6 +201,19 @@ const BrowseJobs = () => {
                           <span>Posted by {job.postedBy.name}</span>
                         </div>
                       )}
+                      {/* Application Count */}
+                      <div className="flex items-center space-x-4 text-sm">
+                        <div className="flex items-center space-x-2 bg-blue-50 px-3 py-1 rounded-full">
+                          <FaUser className="w-3 h-3 text-blue-600" />
+                          <span className="text-blue-700 font-semibold">
+                            {job.applicationCount || 0} {job.applicationCount === 1 ? 'applicant' : 'applicants'}
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-2 bg-green-50 px-3 py-1 rounded-full">
+                          <FaClock className="w-3 h-3 text-green-600" />
+                          <span className="text-green-700 font-semibold">{getTimeAgo(job.createdAt)}</span>
+                        </div>
+                      </div>
                     </div>
                     
                     {/* Bookmark Button */}

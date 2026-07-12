@@ -39,19 +39,19 @@ export default function ChatBot() {
       
       setMessages((prev) => [
         ...prev,
-        { role: "bot", text: data.answer, contexts: data.contexts || [] },
+        { role: "bot", text: data.answer, jobs: data.jobs || [] },
       ]);
     } catch (error) {
       console.error('Chat error:', error);
       setMessages((prev) => [
         ...prev,
-        { role: "bot", text: `Error: ${error.message}. Make sure the server is running and trained with documents.` },
+        { role: "bot", text: `Error: ${error.message}. Please try again later.` },
       ]);
     }
     setLoading(false);
   };
 
-  const CHIPS = ["🔍 Find jobs", "💰 Salary info", "📝 Resume tips", "🏢 Top companies"];
+  const CHIPS = ["🔍 Total jobs", "💻 Data science jobs", "📍 Recent jobs", "🏢 Remote jobs"];
 
   return (
     <>
@@ -93,8 +93,8 @@ export default function ChatBot() {
             </svg>
           </div>
           <div className="flex-1">
-            <p className="text-white font-bold text-sm">AI Assistant</p>
-            <p className="text-white/70 text-[11px] font-medium">Powered by HireX AI</p>
+            <p className="text-white font-bold text-sm">Job Search Assistant</p>
+            <p className="text-white/70 text-[11px] font-medium">Real-time database search</p>
           </div>
           <button 
             onClick={() => setIsOpen(false)}
@@ -110,7 +110,7 @@ export default function ChatBot() {
         <div className="h-full sm:h-[300px] flex-1 overflow-y-auto flex flex-col gap-3 p-4 bg-[#fafbff]">
         {messages.length === 0 && (
           <div className="m-auto text-center text-gray-400">
-            <p className="text-[12.5px] font-medium">Ask me anything about<br/>jobs, salaries, or careers!</p>
+            <p className="text-[12.5px] font-medium">Ask me about available jobs<br/>by role, location, or count!</p>
           </div>
         )}
         {messages.map((m, i) => (
@@ -128,13 +128,24 @@ export default function ChatBot() {
                 ? "text-white rounded-br-[4px]"
                 : "bg-white text-[#1e1b4b] border border-violet-100 shadow-sm rounded-bl-[4px]"}`}
               style={m.role === "user" ? { background: "linear-gradient(135deg,#4f46e5,#7c3aed)" } : {}}>
-              <p>{m.text}</p>
-              {m.contexts?.length > 0 && (
+              <p style={{ whiteSpace: 'pre-line' }}>{m.text}</p>
+              {m.jobs?.length > 0 && (
                 <div className="mt-2 p-2 bg-violet-50 border border-violet-100 rounded-lg">
-                  <p className="text-[10.5px] font-bold text-violet-600 uppercase tracking-wider mb-1">Sources</p>
-                  {m.contexts.map((c, idx) => (
-                    <p key={idx} className="text-[11.5px] text-violet-700">→ {c.title || c}</p>
+                  <p className="text-[10.5px] font-bold text-violet-600 uppercase tracking-wider mb-1">
+                    {m.jobs.length} Job{m.jobs.length > 1 ? 's' : ''} Found
+                  </p>
+                  {m.jobs.slice(0, 3).map((job, idx) => (
+                    <div key={idx} className="text-[11.5px] text-violet-700 mb-1">
+                      → {job.title} at {job.company}
+                      <br/>
+                      <span className="text-[10px] text-violet-500 ml-2">📍 {job.location} | 💰 {job.salary}</span>
+                    </div>
                   ))}
+                  {m.jobs.length > 3 && (
+                    <p className="text-[10px] text-violet-500 italic mt-1">
+                      +{m.jobs.length - 3} more jobs...
+                    </p>
+                  )}
                 </div>
               )}
             </div>
@@ -192,7 +203,7 @@ export default function ChatBot() {
 
         {/* Footer */}
         <p className="text-center text-[10.5px] text-violet-300 font-medium pb-2.5 bg-white">
-          Powered by <span className="text-violet-500 font-bold">HireX AI</span>
+          Real-time job data from <span className="text-violet-500 font-bold">HireX Database</span>
         </p>
       </div>
       )}

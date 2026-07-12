@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { 
-  FaUser, FaEdit, FaBriefcase, FaEye, FaPaperPlane, FaClipboardList, 
+  FaUser, FaBriefcase, FaClipboardList, 
   FaSignOutAlt, FaBars, FaTimes, FaUserTie 
 } from 'react-icons/fa';
-import { HiSparkles } from 'react-icons/hi2';
 import { Briefcase } from 'lucide-react';
 import authService from '../services/authService';
 
@@ -50,16 +49,10 @@ const EmployeeDashboardLayout = ({ children }) => {
 
   const sidebarItems = [
     {
-      name: 'Get Profile',
+      name: 'Profile',
       path: '/employee/profile',
       icon: FaUser,
       color: 'from-blue-500 to-blue-600'
-    },
-    {
-      name: 'Update Profile',
-      path: '/employee/update-profile',
-      icon: FaEdit,
-      color: 'from-green-500 to-green-600'
     },
     {
       name: 'Browse Jobs',

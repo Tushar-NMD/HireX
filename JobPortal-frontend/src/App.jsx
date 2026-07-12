@@ -8,14 +8,17 @@ import AdminDashboardLayout from "./layouts/AdminDashboardLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminProfile from "./pages/admin/AdminProfile";
 import PostJobPage from "./pages/admin/PostJobPage";
+import AIPostJob from "./pages/admin/AIPostJob";
 import JobApplications from "./pages/admin/JobApplications";
 import MyPostedJobs from "./pages/admin/MyPostedJobs";
 import UpdateStatus from "./pages/admin/UpdateStatus";
+import TopResumes from "./pages/admin/TopResumes";
 import EmployeeDashboardLayout from "./layouts/EmployeeDashboardLayout";
 import EmployeeProfile from "./pages/employee/EmployeeProfile";
 import BrowseJobs from "./pages/employee/BrowseJobs";
 import JobDetails from "./pages/employee/JobDetails";
 import ApplyJob from "./pages/employee/ApplyJob";
+import ApplyJobWithAI from "./pages/employee/ApplyJobWithAI";
 import AppliedJobs from "./pages/employee/AppliedJobs";
 import RecommendedJobs from "./pages/employee/RecommendedJobs";
 import ChatBot from "./components/ChatBot";
@@ -62,6 +65,11 @@ function App(){
         } />
         <Route path="/admin/post-job" element={
           <AdminDashboardLayout>
+            <AIPostJob />
+          </AdminDashboardLayout>
+        } />
+        <Route path="/admin/post-job-manual" element={
+          <AdminDashboardLayout>
             <PostJobPage />
           </AdminDashboardLayout>
         } />
@@ -73,6 +81,11 @@ function App(){
         <Route path="/admin/applications" element={
           <AdminDashboardLayout>
             <JobApplications />
+          </AdminDashboardLayout>
+        } />
+        <Route path="/admin/top-resumes" element={
+          <AdminDashboardLayout>
+            <TopResumes />
           </AdminDashboardLayout>
         } />
         <Route path="/admin/update-status" element={
@@ -118,6 +131,11 @@ function App(){
           </EmployeeDashboardLayout>
         } />
         <Route path="/employee/apply/:id" element={
+          <EmployeeDashboardLayout>
+            <ApplyJobWithAI />
+          </EmployeeDashboardLayout>
+        } />
+        <Route path="/employee/apply-manual/:id" element={
           <EmployeeDashboardLayout>
             <ApplyJob />
           </EmployeeDashboardLayout>

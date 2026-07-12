@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { FaBriefcase, FaMapMarkerAlt, FaDollarSign, FaCalendar, FaEye, FaEdit, FaTrash, FaUsers, FaClock, FaChartBar, FaCheckCircle, FaTimesCircle, FaSearch, FaFileAlt } from 'react-icons/fa';
+import { FaBriefcase, FaMapMarkerAlt, FaRupeeSign, FaCalendar, FaTrash, FaUsers, FaClock, FaChartBar, FaCheckCircle, FaTimesCircle, FaSearch, FaFileAlt } from 'react-icons/fa';
 import { HiSparkles } from 'react-icons/hi2';
 import jobService from '../../services/jobService';
 import { FaCheck, FaTimes, FaRegEdit } from 'react-icons/fa';
@@ -240,7 +240,7 @@ const MyPostedJobs = () => {
                             <span>{job.location}</span>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <FaDollarSign className="w-4 h-4" />
+                            <FaRupeeSign className="w-4 h-4" />
                             <span>{job.salary}</span>
                           </div>
                           <div className="flex items-center space-x-2">
@@ -297,18 +297,12 @@ const MyPostedJobs = () => {
                     {/* Action Buttons */}
                     <div className="flex gap-2">
                       <Link
-                        to={`/admin/jobs/${job._id}`}
+                        to="/admin/applications"
+                        state={{ jobId: job._id }}
                         className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
                       >
-                        <FaEye className="w-4 h-4" />
-                        <span className="hidden sm:inline">View</span>
-                      </Link>
-                      <Link
-                        to={`/admin/jobs/${job._id}/edit`}
-                        className="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-colors"
-                      >
-                        <FaEdit className="w-4 h-4" />
-                        <span className="hidden sm:inline">Edit</span>
+                        <FaUsers className="w-4 h-4" />
+                        <span className="hidden sm:inline">Applications</span>
                       </Link>
                       <button
                         onClick={() => handleDeleteJob(job._id)}

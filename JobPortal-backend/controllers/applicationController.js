@@ -6,7 +6,7 @@ const sendEmail = require('../utils/sendEmail');
 // @access  Private (User)
 const applyForJob = async (req, res) => {
   try {
-    const { coverLetter } = req.body;
+    const { coverLetter, resumeAnalysis } = req.body;
     const jobId = req.params.jobId;
 
     if (!req.file) {
@@ -45,14 +45,37 @@ const applyForJob = async (req, res) => {
       });
     }
 
-    // Create application
-    const application = await Application.create({
+    // Prepare application data
+    const applicationData = {
       job: jobId,
       user: req.user.id,
       resume: req.file.path,
       resumeOriginalName: req.file.originalname,
       coverLetter: coverLetter || ''
-    });
+    };
+
+    // Add resume analysis if provided
+    if (resumeAnalysis) {
+      try {
+        const analysisData = typeof resumeAnalysis === 'string' 
+          ? JSON.parse(resumeAnalysis) 
+          : resumeAnalysis;
+        
+        applicationData.resumeAnalysis = {
+          matchScore: analysisData.matchScore || 0,
+          matchingSkills: analysisData.matchingSkills || [],
+          missingSkills: analysisData.missingSkills || [],
+          weakAreas: analysisData.weakAreas || [],
+          suggestions: analysisData.suggestions || [],
+          analyzedAt: new Date()
+        };
+      } catch (error) {
+        console.error('Error parsing resume analysis:', error);
+      }
+    }
+
+    // Create application
+    const application = await Application.create(applicationData);
 
     // Populate user and job details
     await application.populate('user', 'name email');

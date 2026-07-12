@@ -71,9 +71,20 @@ class JobService {
 
     // Apply for a job (Employee/User)
     async applyForJob(jobId, applicationData) {
-        const formData = new FormData();
-        formData.append('resume', applicationData.resume);
-        formData.append('coverLetter', applicationData.coverLetter);
+        // applicationData can be an object or FormData
+        let formData;
+        
+        if (applicationData instanceof FormData) {
+            formData = applicationData;
+        } else {
+            formData = new FormData();
+            formData.append('resume', applicationData.resume);
+            formData.append('coverLetter', applicationData.coverLetter);
+            
+            if (applicationData.resumeAnalysis) {
+                formData.append('resumeAnalysis', JSON.stringify(applicationData.resumeAnalysis));
+            }
+        }
         
         return await this.api.post(`/applications/${jobId}`, formData, {
             headers: {

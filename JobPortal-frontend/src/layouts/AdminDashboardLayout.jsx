@@ -50,16 +50,10 @@ const AdminDashboardLayout = ({ children }) => {
 
   const sidebarItems = [
     {
-      name: 'Get Profile',
+      name: 'Profile',
       path: '/admin/profile',
       icon: FaUser,
       color: 'from-blue-500 to-blue-600'
-    },
-    {
-      name: 'Update Profile',
-      path: '/admin/update-profile',
-      icon: FaEdit,
-      color: 'from-green-500 to-green-600'
     },
     {
       name: 'Post Jobs',
@@ -78,6 +72,12 @@ const AdminDashboardLayout = ({ children }) => {
       path: '/admin/applications',
       icon: FaList,
       color: 'from-pink-500 to-pink-600'
+    },
+    {
+      name: 'Top Resumes',
+      path: '/admin/top-resumes',
+      icon: HiSparkles,
+      color: 'from-yellow-500 to-amber-600'
     },
     {
       name: 'Update Status',

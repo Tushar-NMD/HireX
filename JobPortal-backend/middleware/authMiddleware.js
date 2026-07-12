@@ -85,22 +85,33 @@ const protectAdmin = async (req, res, next) => {
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      req.admin = await Admin.findById(decoded.id).select('-password');
+      // Try Admin model first
+      let admin = await Admin.findById(decoded.id).select('-password');
 
-      if (!req.admin) {
+      // If not found in Admin model, try User model with role='admin'
+      if (!admin) {
+        const user = await User.findById(decoded.id).select('-password');
+        if (user && user.role === 'admin') {
+          req.admin = user; // Treat user with admin role as admin
+          return next();
+        }
+      }
+
+      if (!admin) {
         return res.status(401).json({
           success: false,
           message: 'Not authorized, admin not found'
         });
       }
 
-      if (!req.admin.isActive) {
+      if (!admin.isActive) {
         return res.status(401).json({
           success: false,
           message: 'Admin account is deactivated'
         });
       }
 
+      req.admin = admin;
       return next();
     } catch (error) {
       return res.status(401).json({
