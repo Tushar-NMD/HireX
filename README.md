@@ -1,4 +1,4 @@
-# 🚀 AI-Powered Job Portal
+#HireX
 
 A modern, full-stack job portal application with AI-powered features for intelligent resume analysis, job matching, and automated interviews. Built with MERN stack and integrated with Google Gemini AI.
 
@@ -751,60 +751,3 @@ node test-api.js
 cd JobPortal-frontend
 npm run test
 ```
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- **Google Gemini AI** - AI-powered features
-- **ChromaDB** - Vector database for RAG
-- **Cloudinary** - File storage
-- **MongoDB Atlas** - Database hosting
-- **Tailwind CSS** - UI styling
-
----
-
-## 📧 Contact
-
-For questions or support, please contact:
-- **Email**: tc151460@gmail.com
-- **GitHub**: [@yourusername](https://github.com/yourusername)
-
----
-
-## 🎯 Roadmap
-
-- [ ] Video interview integration
-- [ ] Real-time chat between recruiter and candidate
-- [ ] Mobile app (React Native)
-- [ ] Advanced analytics with charts
-- [ ] Multi-language support
-- [ ] Integration with LinkedIn
-- [ ] Skill assessment tests
-- [ ] Salary negotiation AI assistant
-- [ ] Company review system
-- [ ] Referral program
-
----
-
-**⭐ If you like this project, please give it a star!**
-
-Made with ❤️ using MERN Stack + AI
