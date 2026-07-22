@@ -47,6 +47,15 @@
   100% { transform: translateX(-50%); }
 }
 
+@keyframes word-scroll {
+  0%, 15% { transform: translateY(0); }
+  20%, 35% { transform: translateY(-20%); }
+  40%, 55% { transform: translateY(-40%); }
+  60%, 75% { transform: translateY(-60%); }
+  80%, 95% { transform: translateY(-80%); }
+  100% { transform: translateY(-80%); }
+}
+
 .animate-blob {
   animation: blob 7s infinite;
 }
@@ -107,16 +116,16 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #060606;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #3b82f6, #9333ea);
+  background: linear-gradient(to bottom, #d4af37, #b8962e);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #2563eb, #7e22ce);
+  background: linear-gradient(to bottom, #f5e6c8, #d4af37);
 }
 
 /* Custom Toast Styles */
@@ -232,3 +241,272 @@ html {
   background-size: 200% 200%;
   animation: gradient-shift 3s ease infinite;
 }
+
+/* ── Home page: classical dark glass theme ── */
+@keyframes home-glow-pulse {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(1.08); }
+}
+
+@keyframes home-shimmer-line {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.home-page {
+  background: #060606;
+  color: #e5e5e5;
+}
+
+.home-page-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(212, 175, 55, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 40% at 90% 60%, rgba(180, 140, 60, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 35% at 5% 80%, rgba(212, 175, 55, 0.06) 0%, transparent 45%),
+    #060606;
+}
+
+.home-page-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent 75%);
+}
+
+.home-glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: home-glow-pulse 8s ease-in-out infinite;
+}
+
+.home-glass {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.home-glass-strong {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(212, 175, 55, 0.15);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.home-gold-text {
+  background: linear-gradient(135deg, #f5e6c8 0%, #d4af37 45%, #b8962e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.home-shimmer-border {
+  position: relative;
+  overflow: hidden;
+}
+
+.home-shimmer-border::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.6), transparent);
+  animation: home-shimmer-line 4s ease-in-out infinite;
+}
+
+/* ── Global Dark Theme Overrides for Dashboard Pages inside .home-page ── */
+.home-page {
+  background: #060606 !important;
+  color: #e5e5e5 !important;
+}
+
+/* Force light text color and dark background inside home-page elements */
+.home-page .bg-white,
+.home-page .bg-white\/80,
+.home-page .bg-white\/95,
+.home-page .bg-white\/90 {
+  background: rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+/* Background gradient overrides for layouts */
+.home-page.min-h-screen {
+  background: #060606 !important;
+}
+
+/* Override background colors for sections inside dashboard */
+.home-page .bg-gray-50,
+.home-page .bg-gray-100,
+.home-page .bg-slate-50,
+.home-page .bg-slate-100 {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Colors for specific alert boxes or highlight cards inside dashboard */
+.home-page .bg-blue-50, .home-page .bg-blue-100 {
+  background: rgba(59, 130, 246, 0.05) !important;
+  border-color: rgba(59, 130, 246, 0.15) !important;
+  color: #93c5fd !important;
+}
+.home-page .bg-green-50, .home-page .bg-green-100 {
+  background: rgba(16, 185, 129, 0.05) !important;
+  border-color: rgba(16, 185, 129, 0.15) !important;
+  color: #6ee7b7 !important;
+}
+.home-page .bg-purple-50, .home-page .bg-purple-100 {
+  background: rgba(147, 51, 234, 0.05) !important;
+  border-color: rgba(147, 51, 234, 0.15) !important;
+  color: #c084fc !important;
+}
+.home-page .bg-orange-50, .home-page .bg-orange-100 {
+  background: rgba(249, 115, 22, 0.05) !important;
+  border-color: rgba(249, 115, 22, 0.15) !important;
+  color: #fdba74 !important;
+}
+.home-page .bg-pink-50, .home-page .bg-pink-100 {
+  background: rgba(236, 72, 153, 0.05) !important;
+  border-color: rgba(236, 72, 153, 0.15) !important;
+  color: #fbcfe8 !important;
+}
+.home-page .bg-yellow-50, .home-page .bg-yellow-100 {
+  background: rgba(234, 179, 8, 0.05) !important;
+  border-color: rgba(234, 179, 8, 0.15) !important;
+  color: #fde047 !important;
+}
+.home-page .bg-indigo-50, .home-page .bg-indigo-100 {
+  background: rgba(99, 102, 241, 0.05) !important;
+  border-color: rgba(99, 102, 241, 0.15) !important;
+  color: #c7d2fe !important;
+}
+.home-page .bg-red-50, .home-page .bg-red-100 {
+  background: rgba(239, 68, 68, 0.05) !important;
+  border-color: rgba(239, 68, 68, 0.15) !important;
+  color: #fca5a5 !important;
+}
+
+/* Sidebar and Topbar background overrides */
+.home-page aside, 
+.home-page .sidebar,
+.home-page div[class*="fixed left-0 top-0"],
+.home-page div[class*="bg-white/95"],
+.home-page div[class*="bg-white/80"] {
+  background: rgba(10, 10, 10, 0.8) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Text overrides */
+.home-page h1, .home-page h2, .home-page h3, .home-page h4, .home-page h5, .home-page h6,
+.home-page .text-gray-900,
+.home-page .text-gray-800,
+.home-page .text-gray-700,
+.home-page .text-slate-900,
+.home-page .text-slate-800,
+.home-page .text-zinc-900,
+.home-page .text-zinc-800 {
+  color: #ffffff !important;
+}
+
+.home-page p,
+.home-page span:not(.home-gold-text):not(.text-white),
+.home-page label,
+.home-page .text-gray-600,
+.home-page .text-gray-500,
+.home-page .text-slate-600,
+.home-page .text-slate-500,
+.home-page .text-zinc-600,
+.home-page .text-zinc-500 {
+  color: #a1a1aa !important;
+}
+
+.home-page .text-gray-700 {
+  color: #d4d4d8 !important;
+}
+
+/* Border overrides */
+.home-page border,
+.home-page .border-gray-100,
+.home-page .border-gray-200,
+.home-page .border-gray-300,
+.home-page .border-slate-100,
+.home-page .border-slate-200,
+.home-page .border-zinc-200 {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Input overrides */
+.home-page input:not([type="checkbox"]):not([type="radio"]),
+.home-page textarea,
+.home-page select {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.home-page input:focus,
+.home-page textarea:focus,
+.home-page select:focus {
+  border-color: #d4af37 !important; /* Gold border on focus */
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2) !important;
+  outline: none !important;
+}
+
+/* Buttons and interactive elements inside home-page dashboard */
+.home-page button:not([class*="bg-gradient-to-r"]):not([class*="bg-amber-500"]):not([class*="bg-red-"]):not([class*="bg-green-"]) {
+  color: #e5e5e5 !important;
+}
+
+.home-page button[class*="hover:bg-gray-100"]:hover,
+.home-page .hover\:bg-gray-100:hover,
+.home-page a[class*="hover:bg-white"]:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+}
+
+/* Table overrides */
+.home-page table {
+  color: #e5e5e5 !important;
+}
+
+.home-page th {
+  background-color: rgba(255, 255, 255, 0.02) !important;
+  color: #ffffff !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.home-page td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Modal and cards custom styling */
+.home-page div[class*="shadow-"] {
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Scrollbar dark mode support */
+::-webkit-scrollbar-track {
+  background: #0d0d0d !important;
+}

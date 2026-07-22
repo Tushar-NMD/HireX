@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import PageBackground from '../components/PageBackground';
 import ChatBot from "../components/ChatBot";
 import { FaUserTie, FaUserNinja, FaUserGraduate, FaQuoteLeft } from "react-icons/fa";
 import { HiSparkles } from "react-icons/hi2";
@@ -153,91 +154,109 @@ const Home = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
-            <Navbar />
- <ChatBot />
+        <PageBackground>
+            <Navbar variant="floating" />
+            <ChatBot />
             {/* Hero Section */}
-            <section id="home" className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-                {/* Animated Background Elements */}
-                <div className="absolute inset-0 overflow-hidden">
-                    <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-                    <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-                    <div className="absolute top-40 left-40 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-                </div>
-
+            <section id="home" className="relative pt-36 pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
                 <div className="relative max-w-7xl mx-auto">
-                    <div className="text-center mb-12">
-                        <div className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg mb-6 animate-fade-in">
-                            <TrendingUp className="w-4 h-4 text-green-500" />
-                            <span className="text-sm font-medium text-gray-700">Over 1000+ new jobs posted today</span>
-                        </div>
+                    <div className="grid lg:grid-cols-12 gap-12 items-center">
+                        {/* Left Side Content */}
+                        <div className="lg:col-span-7 text-left">
+                            <div className="inline-flex items-center space-x-2 home-glass px-5 py-2.5 rounded-full mb-8 animate-fade-in">
+                                <TrendingUp className="w-4 h-4 text-amber-400" />
+                                <span className="text-sm font-medium text-zinc-300">Over 1000+ new jobs posted today</span>
+                            </div>
 
-                        <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 animate-slide-up">
-                            Find Your{' '}
-                            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                                Dream Job
-                            </span>
-                            <br />
-                            Today
-                        </h1>
+                            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 animate-slide-up tracking-tight leading-none">
+                                <span className="inline-block py-2">Elevate Your </span>
+                                <br className="sm:hidden" />
+                                <span className="relative inline-block overflow-hidden h-[1.15em] align-bottom py-2">
+                                    <span className="inline-flex flex-col animate-[word-scroll_10s_infinite] text-left">
+                                        <span className="home-gold-text">Career</span>
+                                        <span className="home-gold-text">Talent</span>
+                                        <span className="home-gold-text">Future</span>
+                                        <span className="home-gold-text">Legacy</span>
+                                        <span className="home-gold-text">Career</span>
+                                    </span>
+                                </span>
+                                <br />
+                                <span className="inline-block py-2">Today</span>
+                            </h1>
 
-                        <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto animate-slide-up animation-delay-200">
-                            Discover thousands of job opportunities with all the information you need.
-                            It's your future. Come find it.
-                        </p>
-
-                        {/* Search Bar */}
-                        <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-2xl p-4 animate-slide-up animation-delay-400">
-                            <div className="flex flex-col md:flex-row gap-4">
-                                <div className="flex-1 flex items-center space-x-3 px-4 py-3 bg-gray-50 rounded-xl">
-                                    <Search className="w-5 h-5 text-gray-400" />
-                                    <input
-                                        type="text"
-                                        placeholder="Job title, keywords, or company"
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                        className="flex-1 bg-transparent outline-none text-gray-700 placeholder-gray-400"
-                                    />
-                                </div>
-                                <div className="flex-1 flex items-center space-x-3 px-4 py-3 bg-gray-50 rounded-xl">
-                                    <MapPin className="w-5 h-5 text-gray-400" />
-                                    <input
-                                        type="text"
-                                        placeholder="City or remote"
-                                        value={location}
-                                        onChange={(e) => setLocation(e.target.value)}
-                                        className="flex-1 bg-transparent outline-none text-gray-700 placeholder-gray-400"
-                                    />
-                                </div>
-                                <button className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center space-x-2">
-                                    <span>Search Jobs</span>
-                                    {/* <ArrowRight className="w-5 h-5" /> */}
-                                </button>
+                            <p className="text-xl text-zinc-400 mb-3 animate-slide-up animation-delay-200 leading-relaxed max-w-xl">
+                                Discover thousands of job opportunities with all the information you need.
+                                It's your future. Come find it.
+                            </p>
+                            
+                            <div className="flex flex-wrap gap-4 text-sm text-zinc-500 mt-2 animate-slide-up animation-delay-200">
+                                <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-amber-500" /> Verified Companies</span>
+                                <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-amber-500" /> Real-time Updates</span>
+                                <span className="flex items-center gap-1.5"><CheckCircle className="w-4 h-4 text-amber-500" /> AI-Matching</span>
                             </div>
                         </div>
 
-                        <p className="text-sm text-gray-500 mt-6">
-                            Popular searches: Designer, Developer, Manager, Marketing, Sales
-                        </p>
+                        {/* Right Side Search Bar Container */}
+                        <div className="lg:col-span-5 animate-slide-up animation-delay-400">
+                            <div className="home-glass-strong rounded-3xl p-6 md:p-8 border border-amber-500/20 shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
+                                <div className="flex items-center space-x-2 mb-6">
+                                    <Sparkles className="w-5 h-5 text-amber-400" />
+                                    <h3 className="text-2xl font-bold text-white">Quick Search</h3>
+                                </div>
+                                <div className="flex flex-col gap-5">
+                                    <div className="flex items-center space-x-3 px-4 py-3 bg-black/40 rounded-xl border border-white/5 focus-within:border-amber-500/50 transition-all">
+                                        <Search className="w-5 h-5 text-amber-500/70" />
+                                        <input
+                                            type="text"
+                                            placeholder="Job title, keywords, or company"
+                                            value={searchQuery}
+                                            onFocus={() => navigate('/auth')}
+                                            onChange={() => navigate('/auth')}
+                                            className="flex-1 bg-transparent outline-none text-zinc-200 placeholder-zinc-500"
+                                        />
+                                    </div>
+                                    <div className="flex items-center space-x-3 px-4 py-3 bg-black/40 rounded-xl border border-white/5 focus-within:border-amber-500/50 transition-all">
+                                        <MapPin className="w-5 h-5 text-amber-500/70" />
+                                        <input
+                                            type="text"
+                                            placeholder="City or remote"
+                                            value={location}
+                                            onFocus={() => navigate('/auth')}
+                                            onChange={() => navigate('/auth')}
+                                            className="flex-1 bg-transparent outline-none text-zinc-200 placeholder-zinc-500"
+                                        />
+                                    </div>
+                                    <button 
+                                        onClick={() => navigate('/auth')}
+                                        className="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-700 text-black rounded-xl font-semibold hover:shadow-[0_0_30px_rgba(212,175,55,0.35)] hover:scale-[1.02] transition-all duration-300 flex items-center justify-center space-x-2 border border-amber-400/30 cursor-pointer"
+                                    >
+                                        <span>Search Jobs</span>
+                                    </button>
+                                </div>
+                                <p className="text-xs text-zinc-500 mt-4 text-center">
+                                    Popular searches: Designer, Developer, Manager, Marketing
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
             {/* Stats Section */}
-            <section className="py-12 px-4 sm:px-6 lg:px-8 bg-white/50 backdrop-blur-sm">
+            <section className="py-12 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                         {stats.map((stat, index) => (
                             <div
                                 key={index}
-                                className="text-center p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-2 animate-fade-in"
+                                className="text-center p-6 home-glass rounded-2xl hover:border-amber-500/20 transition-all duration-300 hover:-translate-y-2 animate-fade-in"
                                 style={{ animationDelay: `${index * 100}ms` }}
                             >
-                                <div className={`inline-flex p-3 bg-gradient-to-r ${stat.color} rounded-xl mb-4`}>
-                                    <stat.icon className="w-6 h-6 text-white" />
+                                <div className="inline-flex p-3 bg-gradient-to-r from-amber-500/80 to-amber-700/80 rounded-xl mb-4 border border-amber-400/20">
+                                    <stat.icon className="w-6 h-6 text-black" />
                                 </div>
-                                <h3 className="text-3xl font-bold text-gray-900 mb-2">{stat.value}</h3>
-                                <p className="text-gray-600">{stat.label}</p>
+                                <h3 className="text-3xl font-bold text-white mb-2">{stat.value}</h3>
+                                <p className="text-zinc-400">{stat.label}</p>
                             </div>
                         ))}
                     </div>
@@ -246,22 +265,19 @@ const Home = () => {
 
             {/* Pricing Section */}
             <section id="pricing" className="py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-                {/* Background decoration */}
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 opacity-50"></div>
-
                 <div className="relative max-w-7xl mx-auto">
                     <div className="text-center mb-16">
-                        <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full mb-6 animate-fade-in">
-                            <Sparkles className="w-4 h-4" />
-                            <span className="text-sm font-medium">Choose Your Plan</span>
+                        <div className="inline-flex items-center space-x-2 home-glass px-4 py-2 rounded-full mb-6 animate-fade-in border-amber-500/20">
+                            <Sparkles className="w-4 h-4 text-amber-400" />
+                            <span className="text-sm font-medium text-zinc-300">Choose Your Plan</span>
                         </div>
-                        <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                        <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
                             Flexible{' '}
-                            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            <span className="home-gold-text">
                                 Pricing Plans
                             </span>
                         </h2>
-                        <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+                        <p className="text-zinc-400 text-lg max-w-2xl mx-auto">
                             Choose the perfect plan for your job search journey. Upgrade or downgrade anytime.
                         </p>
                     </div>
@@ -270,14 +286,14 @@ const Home = () => {
                         {pricingPlans.map((plan, index) => (
                             <div
                                 key={index}
-                                className={`relative bg-white rounded-3xl shadow-xl transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl animate-fade-in ${plan.popular ? 'ring-4 ring-blue-500 scale-105 md:scale-110' : ''
+                                className={`relative home-glass rounded-3xl transition-all duration-500 hover:-translate-y-3 hover:border-amber-500/25 animate-fade-in ${plan.popular ? 'home-glass-strong ring-1 ring-amber-500/40 scale-105 md:scale-110' : ''
                                     }`}
                                 style={{ animationDelay: `${index * 150}ms` }}
                             >
                                 {/* Popular Badge */}
                                 {plan.popular && (
                                     <div className="absolute -top-5 left-1/2 transform -translate-x-1/2">
-                                        <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg flex items-center space-x-2">
+                                        <div className="bg-gradient-to-r from-amber-500 to-amber-700 text-black px-6 py-2 rounded-full text-sm font-semibold shadow-lg flex items-center space-x-2 border border-amber-400/30">
                                             <Star className="w-4 h-4 fill-current" />
                                             <span>Most Popular</span>
                                         </div>
@@ -286,28 +302,32 @@ const Home = () => {
 
                                 <div className="p-8">
                                     {/* Icon */}
-                                    <div className={`inline-flex p-4 bg-gradient-to-r ${plan.color} rounded-2xl mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                                        <plan.icon className="w-8 h-8 text-white" />
+                                    <div className={`inline-flex p-4 rounded-2xl mb-6 transition-transform duration-300 ${
+                                        plan.popular
+                                            ? 'bg-gradient-to-r from-amber-500/90 to-amber-700/90 border border-amber-400/20'
+                                            : 'bg-white/5 border border-white/10'
+                                    }`}>
+                                        <plan.icon className={`w-8 h-8 ${plan.popular ? 'text-black' : 'text-amber-400'}`} />
                                     </div>
 
                                     {/* Plan Name */}
-                                    <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                                    <p className="text-gray-600 mb-6">{plan.description}</p>
+                                    <h3 className="text-2xl font-bold text-white mb-2">{plan.name}</h3>
+                                    <p className="text-zinc-400 mb-6">{plan.description}</p>
 
                                     {/* Price */}
                                     <div className="mb-8">
                                         <div className="flex items-baseline">
-                                            <span className="text-5xl font-bold text-gray-900">{plan.price}</span>
-                                            <span className="text-gray-600 ml-2">/{plan.period}</span>
+                                            <span className="text-5xl font-bold home-gold-text">{plan.price}</span>
+                                            <span className="text-zinc-500 ml-2">/{plan.period}</span>
                                         </div>
                                     </div>
 
                                     {/* CTA Button */}
                                     <button
                                         onClick={() => navigate('/auth')}
-                                        className={`w-full py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl mb-8 ${plan.popular
-                                            ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
-                                            : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                                        className={`w-full py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 mb-8 ${plan.popular
+                                            ? 'bg-gradient-to-r from-amber-500 to-amber-700 text-black hover:shadow-[0_0_30px_rgba(212,175,55,0.3)] border border-amber-400/30'
+                                            : 'bg-white/5 text-zinc-200 hover:bg-white/10 border border-white/10'
                                             }`}
                                     >
                                         {plan.price === '$0' ? 'Get Started Free' : 'Start Free Trial'}
@@ -315,23 +335,23 @@ const Home = () => {
 
                                     {/* Features List */}
                                     <div className="space-y-4">
-                                        <p className="text-sm font-semibold text-gray-900 mb-4">What's included:</p>
+                                        <p className="text-sm font-semibold text-zinc-300 mb-4">What's included:</p>
                                         {plan.features.map((feature, featureIndex) => (
                                             <div
                                                 key={featureIndex}
                                                 className="flex items-start space-x-3"
                                             >
                                                 {feature.included ? (
-                                                    <div className="flex-shrink-0 w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
-                                                        <Check className="w-3 h-3 text-green-600" />
+                                                    <div className="flex-shrink-0 w-5 h-5 bg-amber-500/15 rounded-full flex items-center justify-center mt-0.5 border border-amber-500/30">
+                                                        <Check className="w-3 h-3 text-amber-400" />
                                                     </div>
                                                 ) : (
-                                                    <div className="flex-shrink-0 w-5 h-5 bg-gray-100 rounded-full flex items-center justify-center mt-0.5">
-                                                        <X className="w-3 h-3 text-gray-400" />
+                                                    <div className="flex-shrink-0 w-5 h-5 bg-white/5 rounded-full flex items-center justify-center mt-0.5 border border-white/10">
+                                                        <X className="w-3 h-3 text-zinc-600" />
                                                     </div>
                                                 )}
                                                 <span
-                                                    className={`text-sm ${feature.included ? 'text-gray-700' : 'text-gray-400'
+                                                    className={`text-sm ${feature.included ? 'text-zinc-300' : 'text-zinc-600'
                                                         }`}
                                                 >
                                                     {feature.text}
@@ -340,31 +360,26 @@ const Home = () => {
                                         ))}
                                     </div>
                                 </div>
-
-                                {/* Decorative gradient border */}
-                                {plan.popular && (
-                                    <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-600 to-purple-600 opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none"></div>
-                                )}
                             </div>
                         ))}
                     </div>
 
                     {/* Additional Info */}
                     <div className="mt-16 text-center">
-                        <p className="text-gray-600 mb-4">
+                        <p className="text-zinc-400 mb-4">
                             All plans include a 14-day free trial. No credit card required.
                         </p>
-                        <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-500">
+                        <div className="flex flex-wrap justify-center gap-6 text-sm text-zinc-500">
                             <div className="flex items-center space-x-2">
-                                <CheckCircle className="w-4 h-4 text-green-500" />
+                                <CheckCircle className="w-4 h-4 text-amber-500" />
                                 <span>Cancel anytime</span>
                             </div>
                             <div className="flex items-center space-x-2">
-                                <CheckCircle className="w-4 h-4 text-green-500" />
+                                <CheckCircle className="w-4 h-4 text-amber-500" />
                                 <span>Secure payment</span>
                             </div>
                             <div className="flex items-center space-x-2">
-                                <CheckCircle className="w-4 h-4 text-green-500" />
+                                <CheckCircle className="w-4 h-4 text-amber-500" />
                                 <span>Money-back guarantee</span>
                             </div>
                         </div>
@@ -373,26 +388,26 @@ const Home = () => {
             </section>
 
             {/* Features Section */}
-            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-600 to-purple-600">
-                <div className="max-w-7xl mx-auto">
+            <section className="py-20 px-4 sm:px-6 lg:px-8">
+                <div className="max-w-7xl mx-auto home-glass-strong rounded-3xl p-10 md:p-14 border border-amber-500/10">
                     <div className="text-center mb-12">
                         <h2 className="text-4xl font-bold text-white mb-4">
-                            Why Choose JobPortal?
+                            Why Choose <span className="home-gold-text">JobPortal</span>?
                         </h2>
-                        <p className="text-blue-100 text-lg">Everything you need to find your perfect job</p>
+                        <p className="text-zinc-400 text-lg">Everything you need to find your perfect job</p>
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-8">
                         {features.map((feature, index) => (
                             <div
                                 key={index}
-                                className="bg-white/10 backdrop-blur-lg p-8 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-300 hover:-translate-y-2"
+                                className="home-glass p-8 rounded-2xl hover:border-amber-500/20 transition-all duration-300 hover:-translate-y-2"
                             >
-                                <div className={`inline-flex p-4 bg-gradient-to-r ${feature.color} rounded-xl mb-6`}>
-                                    <feature.icon className="w-8 h-8 text-white" />
+                                <div className="inline-flex p-4 bg-gradient-to-r from-amber-500/80 to-amber-700/80 rounded-xl mb-6 border border-amber-400/20">
+                                    <feature.icon className="w-8 h-8 text-black" />
                                 </div>
                                 <h3 className="text-2xl font-bold text-white mb-4">{feature.title}</h3>
-                                <p className="text-blue-100">{feature.description}</p>
+                                <p className="text-zinc-400">{feature.description}</p>
                             </div>
                         ))}
                     </div>
@@ -400,20 +415,20 @@ const Home = () => {
             </section>
 
             {/* Testimonials Section */}
-            <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-blue-50">
+            <section className="py-20 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-16">
-                        <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-full mb-6 animate-fade-in">
-                            <HiSparkles className="w-4 h-4" />
-                            <span className="text-sm font-medium">Success Stories</span>
+                        <div className="inline-flex items-center space-x-2 home-glass px-4 py-2 rounded-full mb-6 animate-fade-in">
+                            <HiSparkles className="w-4 h-4 text-amber-400" />
+                            <span className="text-sm font-medium text-zinc-300">Success Stories</span>
                         </div>
-                        <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                        <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
                             What Our{' '}
-                            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                            <span className="home-gold-text">
                                 Users Say
                             </span>
                         </h2>
-                        <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+                        <p className="text-zinc-400 text-lg max-w-2xl mx-auto">
                             Real success stories from job seekers who found their dream careers
                         </p>
                     </div>
@@ -422,84 +437,80 @@ const Home = () => {
                         {testimonials.map((testimonial, index) => (
                             <div
                                 key={index}
-                                className="relative bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 group animate-fade-in"
+                                className="relative home-glass p-8 rounded-3xl hover:border-amber-500/20 transition-all duration-500 hover:-translate-y-3 group animate-fade-in"
                                 style={{ animationDelay: `${index * 150}ms` }}
                             >
                                 {/* Quote Icon */}
-                                <div className="absolute top-6 right-6 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    <FaQuoteLeft className="w-12 h-12 text-blue-600" />
+                                <div className="absolute top-6 right-6 opacity-20 group-hover:opacity-40 transition-opacity">
+                                    <FaQuoteLeft className="w-12 h-12 text-amber-500" />
                                 </div>
 
                                 {/* Rating Stars */}
                                 <div className="flex items-center mb-6 space-x-1">
                                     {[...Array(testimonial.rating)].map((_, i) => (
-                                        <BsFillStarFill key={i} className="w-5 h-5 text-yellow-400" />
+                                        <BsFillStarFill key={i} className="w-5 h-5 text-amber-400" />
                                     ))}
                                 </div>
 
                                 {/* Testimonial Text */}
-                                <p className="text-gray-700 mb-8 text-base leading-relaxed relative z-10">
+                                <p className="text-zinc-300 mb-8 text-base leading-relaxed relative z-10">
                                     "{testimonial.text}"
                                 </p>
 
                                 {/* User Info */}
-                                <div className="flex items-center space-x-4 pt-6 border-t border-gray-100">
+                                <div className="flex items-center space-x-4 pt-6 border-t border-white/10">
                                     {/* Avatar with Icon */}
-                                    <div className={`relative flex-shrink-0 w-14 h-14 bg-gradient-to-r ${testimonial.iconColor} rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                                        <testimonial.icon className="w-7 h-7 text-white" />
-                                        {/* Online indicator */}
-                                        <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                                    <div className="relative flex-shrink-0 w-14 h-14 bg-gradient-to-r from-amber-500/80 to-amber-700/80 rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 border border-amber-400/20">
+                                        <testimonial.icon className="w-7 h-7 text-black" />
+                                        <div className="absolute bottom-0 right-0 w-4 h-4 bg-emerald-500 rounded-full border-2 border-zinc-900"></div>
                                     </div>
 
                                     {/* User Details */}
                                     <div className="flex-1">
-                                        <h4 className="font-bold text-gray-900 text-lg">{testimonial.name}</h4>
-                                        <p className="text-sm text-gray-600 font-medium">{testimonial.role}</p>
-                                        <p className="text-xs text-gray-500">{testimonial.company}</p>
+                                        <h4 className="font-bold text-white text-lg">{testimonial.name}</h4>
+                                        <p className="text-sm text-zinc-400 font-medium">{testimonial.role}</p>
+                                        <p className="text-xs text-zinc-500">{testimonial.company}</p>
                                     </div>
                                 </div>
-
-                                {/* Hover gradient effect */}
-                                <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-600/5 to-purple-600/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                             </div>
                         ))}
                     </div>
 
                     {/* Trust Badge */}
                     <div className="mt-16 text-center">
-                        <p className="text-gray-600 text-lg font-medium mb-4">
+                        <p className="text-zinc-400 text-lg font-medium mb-4">
                             Join 2M+ professionals who trust JobPortal
                         </p>
                         <div className="flex justify-center items-center space-x-2">
                             {[...Array(5)].map((_, i) => (
-                                <BsFillStarFill key={i} className="w-6 h-6 text-yellow-400" />
+                                <BsFillStarFill key={i} className="w-6 h-6 text-amber-400" />
                             ))}
-                            <span className="ml-3 text-gray-700 font-semibold text-lg">4.9/5.0</span>
-                            <span className="text-gray-500">from 50,000+ reviews</span>
+                            <span className="ml-3 text-white font-semibold text-lg">4.9/5.0</span>
+                            <span className="text-zinc-500">from 50,000+ reviews</span>
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* CTA Section */}
-            <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-purple-600">
-                <div className="max-w-4xl mx-auto text-center">
+            <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8">
+                <div className="max-w-4xl mx-auto text-center home-glass-strong rounded-3xl p-12 md:p-16 border border-amber-500/15">
                     <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                        Ready to Take the Next Step?
+                        Ready to Take the <span className="home-gold-text">Next Step</span>?
                     </h2>
-                    <p className="text-xl text-blue-100 mb-8">
+                    <p className="text-xl text-zinc-400 mb-8">
                         Join thousands of job seekers who found their dream careers through JobPortal
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         <button
                             onClick={() => navigate('/auth')}
-                            className="px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                            className="px-8 py-4 bg-gradient-to-r from-amber-500 to-amber-700 text-black rounded-xl font-semibold hover:shadow-[0_0_30px_rgba(212,175,55,0.35)] hover:scale-105 transition-all duration-300 border border-amber-400/30"
                         >
                             Create Free Account
                         </button>
                         <button
                             onClick={() => navigate('/auth')}
-                            className="px-8 py-4 bg-transparent border-2 border-white text-white rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-all duration-300"
+                            className="px-8 py-4 bg-transparent border border-white/20 text-zinc-200 rounded-xl font-semibold hover:bg-white/5 hover:border-amber-500/30 hover:text-white transition-all duration-300"
                         >
                             Post a Job
                         </button>
@@ -507,7 +518,7 @@ const Home = () => {
                 </div>
             </section>
             <Footer />
-        </div>
+        </PageBackground>
     );
 };
 export default Home;

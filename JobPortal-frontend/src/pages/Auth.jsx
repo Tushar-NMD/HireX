@@ -2,14 +2,14 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FaUserShield, FaUserTie, FaEnvelope, FaLock, FaUser, FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { HiSparkles } from 'react-icons/hi2';
 import { Briefcase } from 'lucide-react';
 import authService from '../services/authService';
+import PageBackground from '../components/PageBackground';
 
 const Auth = () => {
     const navigate = useNavigate();
-    const [authMode, setAuthMode] = useState('signin'); // 'signin' or 'register'
-    const [userType, setUserType] = useState(null); // 'admin' or 'employee'
+    const [authMode, setAuthMode] = useState('signin');
+    const [userType, setUserType] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
@@ -18,17 +18,14 @@ const Auth = () => {
         password: '',
     });
 
-    // Check if user is already logged in and redirect to dashboard
     useEffect(() => {
         const token = authService.getToken();
         const userData = authService.getUserData();
         
         if (token && userData) {
-            // Redirect based on role
             if (userData.role === 'admin') {
                 navigate('/admin/dashboard');
             } else {
-                // For employees/users (role: 'employee' or 'user')
                 navigate('/employee/jobs');
             }
         }
@@ -37,7 +34,6 @@ const Auth = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         
-        // Form validation
         if (authMode === 'register' && !formData.name.trim()) {
             toast.error("Please enter your full name");
             return;
@@ -59,7 +55,6 @@ const Auth = () => {
             let response;
             const userTypeLabel = userType === 'admin' ? 'Admin' : 'Employee';
 
-            // Call appropriate API based on auth mode and user type
             if (authMode === 'register') {
                 if (userType === 'admin') {
                     response = await authService.registerAdmin(formData);
@@ -67,10 +62,7 @@ const Auth = () => {
                     response = await authService.registerEmployee(formData);
                 }
                 
-                // Show success message
                 toast.success(`Registration Successful! Please sign in to continue.`);
-                
-                // Reset form and switch to signin mode
                 setFormData({ name: '', email: formData.email, password: '' });
                 setAuthMode('signin');
                 
@@ -81,15 +73,12 @@ const Auth = () => {
                     response = await authService.loginEmployee(formData);
                 }
                 
-                // Store token and user data immediately after successful login
                 if (response.success && response.data) {
-                    // Store token
                     const token = response.data.token;
                     if (token) {
                         authService.setToken(token);
                     }
                     
-                    // Store user data
                     authService.setUserData({
                         id: response.data._id,
                         name: response.data.name,
@@ -97,10 +86,8 @@ const Auth = () => {
                         role: response.data.role
                     });
                     
-                    // Show success message
                     toast.success(`Login Successful! Welcome back, ${userTypeLabel}!`);
 
-                    // Redirect after short delay
                     setTimeout(() => {
                         if (userType === 'admin') {
                             navigate('/admin/dashboard');
@@ -136,243 +123,217 @@ const Auth = () => {
         resetSelection();
     };
 
+    const inputClass =
+        'w-full pl-10 pr-3 py-2.5 text-sm bg-black/30 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500/40 transition-all text-zinc-200 placeholder-zinc-600';
+
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center p-4">
-            {/* Animated Background Elements */}
-            <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-                <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-                <div className="absolute top-40 left-40 w-80 h-80 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
-            </div>
+        <PageBackground>
+            <div className="min-h-screen flex items-center justify-center p-4 pt-8">
+                {/* Back to home */}
+                <Link
+                    to="/"
+                    className="fixed top-6 left-6 z-50 flex items-center gap-2 text-sm text-zinc-400 hover:text-amber-300 transition-colors home-glass px-4 py-2 rounded-xl"
+                >
+                    <FaArrowLeft className="w-3.5 h-3.5" />
+                    Back to Home
+                </Link>
 
-            {/* Main Container */}
-            <div className="relative w-full max-w-lg">
-                <div className="bg-white rounded-2xl shadow-2xl overflow-hidden p-6">
-                    {/* Logo */}
-                    <div className="flex items-center justify-center space-x-2 mb-4">
-                        <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-2 rounded-lg">
-                            <Briefcase className="w-5 h-5 text-white" />
+                <div className="relative w-full max-w-lg">
+                    <div className="home-glass-strong rounded-2xl overflow-hidden p-6 md:p-8 home-shimmer-border">
+                        {/* Logo */}
+                        <div className="flex items-center justify-center space-x-2 mb-6">
+                            <div className="bg-gradient-to-br from-amber-400/90 to-amber-700/90 p-2 rounded-lg border border-amber-400/20">
+                                <Briefcase className="w-5 h-5 text-black" />
+                            </div>
+                            <span className="text-2xl font-bold home-gold-text tracking-wide">
+                                HireX
+                            </span>
                         </div>
-                        <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                            JobPortal
-                        </span>
-                    </div>
 
-                    {/* Header */}
-                    <div className="mb-4 text-center">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-1">
-                            {authMode === 'signin' ? 'Sign In' : 'Create Account'}
-                        </h2>
-                        <p className="text-sm text-gray-600">
-                            {authMode === 'signin'
-                                ? 'Access your account'
-                                : 'Fill in details to register'}
-                        </p>
-                    </div>
-
-                    {/* User Type Selection */}
-                    {!userType ? (
-                        <div className="space-y-3 animate-fade-in">
-                            <h3 className="text-base font-semibold text-gray-900 mb-3 text-center">
-                                {authMode === 'signin' ? 'Sign in as' : 'Register as'}
-                            </h3>
-
-                            {/* Admin Option */}
-                            <button
-                                onClick={() => setUserType('admin')}
-                                className="w-full group bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 p-4 rounded-xl border-2 border-transparent hover:border-blue-500 transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5"
-                            >
-                                <div className="flex items-center space-x-3">
-                                    <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                        <FaUserShield className="w-5 h-5 text-white" />
-                                    </div>
-                                    <div className="flex-1 text-left">
-                                        <h4 className="text-sm font-bold text-gray-900">Admin / Employer</h4>
-                                        <p className="text-xs text-gray-600">Post jobs & manage</p>
-                                    </div>
-                                </div>
-                            </button>
-
-                            {/* Employee Option */}
-                            <button
-                                onClick={() => setUserType('employee')}
-                                className="w-full group bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 p-4 rounded-xl border-2 border-transparent hover:border-green-500 transition-all duration-300 hover:shadow-lg transform hover:-translate-y-0.5"
-                            >
-                                <div className="flex items-center space-x-3">
-                                    <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                                        <FaUserTie className="w-5 h-5 text-white" />
-                                    </div>
-                                    <div className="flex-1 text-left">
-                                        <h4 className="text-sm font-bold text-gray-900">Employee / Job Seeker</h4>
-                                        <p className="text-xs text-gray-600">Find & apply for jobs</p>
-                                    </div>
-                                </div>
-                            </button>
+                        {/* Header */}
+                        <div className="mb-6 text-center">
+                            <h2 className="text-2xl font-bold text-white mb-1">
+                                {authMode === 'signin' ? 'Sign In' : 'Create Account'}
+                            </h2>
+                            <p className="text-sm text-zinc-400">
+                                {authMode === 'signin'
+                                    ? 'Access your account'
+                                    : 'Fill in details to register'}
+                            </p>
                         </div>
-                    ) : (
-                        /* Login/Register Form */
-                        <div className="animate-slide-left">
-                            {/* Selected User Type Badge */}
-                            <div className="flex items-center justify-between mb-4 p-3 bg-gray-50 rounded-lg">
-                                <div className="flex items-center space-x-2">
-                                    <div
-                                        className={`w-8 h-8 rounded-lg flex items-center justify-center ${userType === 'admin'
-                                            ? 'bg-gradient-to-r from-blue-600 to-purple-600'
-                                            : 'bg-gradient-to-r from-green-600 to-emerald-600'
-                                        }`}
-                                    >
-                                        {userType === 'admin' ? (
-                                            <FaUserShield className="w-4 h-4 text-white" />
-                                        ) : (
-                                            <FaUserTie className="w-4 h-4 text-white" />
-                                        )}
-                                    </div>
-                                    <div>
-                                        <p className="text-xs text-gray-600">
-                                            {authMode === 'signin' ? 'Signing in as' : 'Registering as'}
-                                        </p>
-                                        <p className="font-semibold text-gray-900 text-xs">
-                                            {userType === 'admin' ? 'Admin / Employer' : 'Employee / Job Seeker'}
-                                        </p>
-                                    </div>
-                                </div>
+
+                        {/* User Type Selection */}
+                        {!userType ? (
+                            <div className="space-y-3 animate-fade-in">
+                                <h3 className="text-base font-semibold text-zinc-200 mb-3 text-center">
+                                    {authMode === 'signin' ? 'Sign in as' : 'Register as'}
+                                </h3>
+
                                 <button
-                                    onClick={resetSelection}
-                                    className="text-xs text-blue-600 hover:text-blue-700 font-medium"
+                                    onClick={() => setUserType('admin')}
+                                    className="w-full group home-glass p-4 rounded-xl border border-white/10 hover:border-amber-500/30 transition-all duration-300 hover:-translate-y-0.5"
                                 >
-                                    Change
+                                    <div className="flex items-center space-x-3">
+                                        <div className="shrink-0 w-10 h-10 bg-gradient-to-r from-amber-500/80 to-amber-700/80 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border border-amber-400/20">
+                                            <FaUserShield className="w-5 h-5 text-black" />
+                                        </div>
+                                        <div className="flex-1 text-left">
+                                            <h4 className="text-sm font-bold text-white">Admin / Employer</h4>
+                                            <p className="text-xs text-zinc-500">Post jobs & manage</p>
+                                        </div>
+                                    </div>
+                                </button>
+
+                                <button
+                                    onClick={() => setUserType('employee')}
+                                    className="w-full group home-glass p-4 rounded-xl border border-white/10 hover:border-amber-500/30 transition-all duration-300 hover:-translate-y-0.5"
+                                >
+                                    <div className="flex items-center space-x-3">
+                                        <div className="shrink-0 w-10 h-10 bg-gradient-to-r from-amber-500/80 to-amber-700/80 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-300 border border-amber-400/20">
+                                            <FaUserTie className="w-5 h-5 text-black" />
+                                        </div>
+                                        <div className="flex-1 text-left">
+                                            <h4 className="text-sm font-bold text-white">Employee / Job Seeker</h4>
+                                            <p className="text-xs text-zinc-500">Find & apply for jobs</p>
+                                        </div>
+                                    </div>
                                 </button>
                             </div>
+                        ) : (
+                            <div className="animate-slide-up">
+                                <div className="flex items-center justify-between mb-4 p-3 home-glass rounded-lg border border-white/10">
+                                    <div className="flex items-center space-x-2">
+                                        <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-r from-amber-500/80 to-amber-700/80 border border-amber-400/20">
+                                            {userType === 'admin' ? (
+                                                <FaUserShield className="w-4 h-4 text-black" />
+                                            ) : (
+                                                <FaUserTie className="w-4 h-4 text-black" />
+                                            )}
+                                        </div>
+                                        <div>
+                                            <p className="text-xs text-zinc-500">
+                                                {authMode === 'signin' ? 'Signing in as' : 'Registering as'}
+                                            </p>
+                                            <p className="font-semibold text-zinc-200 text-xs">
+                                                {userType === 'admin' ? 'Admin / Employer' : 'Employee / Job Seeker'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={resetSelection}
+                                        className="text-xs text-amber-400 hover:text-amber-300 font-medium"
+                                    >
+                                        Change
+                                    </button>
+                                </div>
 
-                            {/* Form */}
-                            <form onSubmit={handleSubmit} className="space-y-3">
-                                {/* Name Field (Register only) */}
-                                {authMode === 'register' && (
+                                <form onSubmit={handleSubmit} className="space-y-3">
+                                    {authMode === 'register' && (
+                                        <div className="space-y-1">
+                                            <label className="text-xs font-medium text-zinc-400">Full Name</label>
+                                            <div className="relative">
+                                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                    <FaUser className="w-4 h-4 text-amber-500/60" />
+                                                </div>
+                                                <input
+                                                    type="text"
+                                                    name="name"
+                                                    value={formData.name}
+                                                    onChange={handleInputChange}
+                                                    placeholder="Enter your full name"
+                                                    required
+                                                    className={inputClass}
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+
                                     <div className="space-y-1">
-                                        <label className="text-xs font-medium text-gray-700">Full Name</label>
+                                        <label className="text-xs font-medium text-zinc-400">Email Address</label>
                                         <div className="relative">
                                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                <FaUser className="w-4 h-4 text-gray-400" />
+                                                <FaEnvelope className="w-4 h-4 text-amber-500/60" />
                                             </div>
                                             <input
-                                                type="text"
-                                                name="name"
-                                                value={formData.name}
+                                                type="email"
+                                                name="email"
+                                                value={formData.email}
                                                 onChange={handleInputChange}
-                                                placeholder="Enter your full name"
+                                                placeholder="Enter your email"
                                                 required
-                                                className="w-full pl-10 pr-3 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                                className={inputClass}
                                             />
                                         </div>
                                     </div>
-                                )}
 
-                                {/* Email Field */}
-                                <div className="space-y-1">
-                                    <label className="text-xs font-medium text-gray-700">Email Address</label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <FaEnvelope className="w-4 h-4 text-gray-400" />
+                                    <div className="space-y-1">
+                                        <label className="text-xs font-medium text-zinc-400">Password</label>
+                                        <div className="relative">
+                                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <FaLock className="w-4 h-4 text-amber-500/60" />
+                                            </div>
+                                            <input
+                                                type={showPassword ? "text" : "password"}
+                                                name="password"
+                                                value={formData.password}
+                                                onChange={handleInputChange}
+                                                placeholder="Enter your password"
+                                                required
+                                                className="w-full pl-10 pr-10 py-2.5 text-sm bg-black/30 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500/40 transition-all text-zinc-200 placeholder-zinc-600"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                className="absolute inset-y-0 right-0 pr-3 flex items-center text-zinc-500 hover:text-zinc-300 transition-colors"
+                                            >
+                                                {showPassword ? (
+                                                    <FaEyeSlash className="w-4 h-4" />
+                                                ) : (
+                                                    <FaEye className="w-4 h-4" />
+                                                )}
+                                            </button>
                                         </div>
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            value={formData.email}
-                                            onChange={handleInputChange}
-                                            placeholder="Enter your email"
-                                            required
-                                            className="w-full pl-10 pr-3 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                        />
                                     </div>
-                                </div>
 
-                                {/* Password Field */}
-                                <div className="space-y-1">
-                                    <label className="text-xs font-medium text-gray-700">Password</label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <FaLock className="w-4 h-4 text-gray-400" />
-                                        </div>
-                                        <input
-                                            type={showPassword ? "text" : "password"}
-                                            name="password"
-                                            value={formData.password}
-                                            onChange={handleInputChange}
-                                            placeholder="Enter your password"
-                                            required
-                                            className="w-full pl-10 pr-10 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
-                                        >
-                                            {showPassword ? (
-                                                <FaEyeSlash className="w-4 h-4" />
-                                            ) : (
-                                                <FaEye className="w-4 h-4" />
-                                            )}
-                                        </button>
-                                    </div>
-                                </div>
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className={`w-full py-3 rounded-lg text-sm font-semibold transition-all duration-300 mt-4 ${
+                                            isSubmitting
+                                                ? 'bg-zinc-700 cursor-not-allowed text-zinc-400'
+                                                : 'bg-gradient-to-r from-amber-500 to-amber-700 text-black hover:shadow-[0_0_24px_rgba(212,175,55,0.35)] hover:scale-[1.02] active:scale-[0.98] border border-amber-400/30'
+                                        }`}
+                                    >
+                                        {isSubmitting ? (
+                                            <div className="flex items-center justify-center space-x-2">
+                                                <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin"></div>
+                                                <span>{authMode === 'signin' ? 'Signing In...' : 'Creating Account...'}</span>
+                                            </div>
+                                        ) : (
+                                            authMode === 'signin' ? 'Sign In' : 'Create Account'
+                                        )}
+                                    </button>
+                                </form>
+                            </div>
+                        )}
 
-                                {/* Submit Button */}
+                        <div className="mt-6 text-center">
+                            <p className="text-sm text-zinc-500">
+                                {authMode === 'signin'
+                                    ? "Don't have an account? "
+                                    : 'Already have an account? '}
                                 <button
-                                    type="submit"
-                                    disabled={isSubmitting}
-                                    className={`w-full py-3 rounded-lg text-sm font-semibold transition-all duration-300 mt-4 ${
-                                        isSubmitting
-                                            ? 'bg-gray-400 cursor-not-allowed'
-                                            : 'bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]'
-                                    }`}
+                                    onClick={switchMode}
+                                    className="text-amber-400 hover:text-amber-300 font-semibold"
                                 >
-                                    {isSubmitting ? (
-                                        <div className="flex items-center justify-center space-x-2">
-                                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                            <span>{authMode === 'signin' ? 'Signing In...' : 'Creating Account...'}</span>
-                                        </div>
-                                    ) : (
-                                        authMode === 'signin' ? 'Sign In' : 'Create Account'
-                                    )}
+                                    {authMode === 'signin' ? 'Register' : 'Sign In'}
                                 </button>
-                            </form>
+                            </p>
                         </div>
-                    )}
-
-                    {/* Switch Mode */}
-                    <div className="mt-4 text-center">
-                        <p className="text-sm text-gray-600">
-                            {authMode === 'signin'
-                                ? "Don't have an account? "
-                                : 'Already have an account? '}
-                            <button
-                                onClick={switchMode}
-                                className="text-blue-600 hover:text-blue-700 font-semibold"
-                            >
-                                {authMode === 'signin' ? 'Register' : 'Sign In'}
-                            </button>
-                        </p>
                     </div>
                 </div>
             </div>
-
-            <style>{`
-                @keyframes fade-in {
-                    from { opacity: 0; transform: scale(0.95); }
-                    to { opacity: 1; transform: scale(1); }
-                }
-                @keyframes slide-left {
-                    from { opacity: 0; transform: translateX(20px); }
-                    to { opacity: 1; transform: translateX(0); }
-                }
-                .animate-fade-in {
-                    animation: fade-in 0.3s ease-out;
-                }
-                .animate-slide-left {
-                    animation: slide-left 0.3s ease-out;
-                }
-            `}</style>
-        </div>
+        </PageBackground>
     );
 };
 
